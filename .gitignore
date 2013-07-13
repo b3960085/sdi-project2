@@ -1,0 +1,19 @@
+# Xcode
+build
+*.swp
+*.mode1
+*.mode1v3
+*.mode2
+*.mode2v3
+*.pbxuser
+*.perspective
+*.perspectivev3
+xcuserdata/
+*.xcuserstate
+*~.nib
+
+# OS X
+.DS_Store
+profile
+
+*.tm_build_errors
