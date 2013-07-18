@@ -28,6 +28,20 @@ var welcomeMessage = function(firstLaunch) {
     }
 }
 
+var isSyncNecessary = function(localArtistCount, remoteArtistCount) {
+    // If provided number of artists is less than available, start syncing.
+    if (localArtistCount < remoteArtistCount) {
+        // True, there are less artists and a sync should be performed
+        console.log("Additional artists available. Beginning background sync of " + (remoteArtistCount - localArtistCount) + " remaining artists.");
+        return false;
+    } else {
+        // False, no sync required.
+        console.log("All " + localArtistCount + " available artists are synced locally, but a backgrond sync will occur to double check.");
+        return true;
+    }
+}
+
 // Execution
 // Welcome the user to the application.
 welcomeMessage(firstRun);
+allMusicAvailable = isSyncNecessary(availableArtists, artistCount);
