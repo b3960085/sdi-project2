@@ -41,7 +41,42 @@ var isSyncNecessary = function(localArtistCount, remoteArtistCount) {
     }
 }
 
+var syncRemainingArtists = function(currentArtistCount) {
+    // Set remaining artists to be synced to initial count.
+    var remainingArtists = artistCount - currentArtistCount;
+    // Initialize a counter variable.
+    var artistsSynced = 0;
+    // While there are artists remaining (or a zero-sync in the case of a pre-synced library)
+    while (remainingArtists >= 0) {
+        // Remove one from to-be-synced count
+        remainingArtists--;
+        // If the remaining artist count is negative, this denotes that a "zero-sync" was performed.
+        if (remainingArtists < 0) {
+            console.log("Synced artist information, no additional artists found.");
+            break;
+        }
+        // If the loop has continued, increment the artist synced count and output status.
+        artistsSynced++;
+        // if (remainingArtists % 10 === 0 || remainingArtists === -1) // Uncomment to reduce output to every 10 artists synced;
+        {
+            // If there are no remaining artists, output the completed sync count.
+            if (remainingArtists === 0) {
+                console.log("Sync complete, " + artistsSynced + " artists synced.");
+                // The break is to prevent the "zero-sync" output to the console.
+                break;
+            } else {
+                // Simple counting output.
+                console.log(artistsSynced + " artists synced. " + remainingArtists + " remaining.");
+            }
+        }
+    }
+    // Return the number of artists synced
+    return artistsSynced;
+}
+
 // Execution
 // Welcome the user to the application.
 welcomeMessage(firstRun);
 allMusicAvailable = isSyncNecessary(availableArtists, artistCount);
+var synchedArtists = syncRemainingArtists(availableArtists);
+availableArtists = synchedArtists + availableArtists;
