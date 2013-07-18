@@ -75,9 +75,16 @@ var syncRemainingArtists = function(currentArtistCount) {
     return artistsSynced;
 }
 
+var selectionInformation = function(selectedArtist, selectedAlbum) {
+    var artistName = selectedArtist;
+    var albumName = selectedAlbum;
+    return (albumName + " by " + artistName);
+}
+
 // Execution
 // Welcome the user to the application.
 welcomeMessage(firstRun);
 allMusicAvailable = isSyncNecessary(availableArtists, artistCount);
 var synchedArtists = syncRemainingArtists(availableArtists);
 availableArtists = synchedArtists + availableArtists;
+var selection = selectionInformation(selectedArtist, selectedAlbum);
