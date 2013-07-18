@@ -27,3 +27,7 @@ var welcomeMessage = function(firstLaunch) {
         availableArtists = 234;
     }
 }
+
+// Execution
+// Welcome the user to the application.
+welcomeMessage(firstRun);
