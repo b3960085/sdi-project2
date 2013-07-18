@@ -8,12 +8,13 @@ var firstRun = true;
 // firstRun = false; // Uncomment if "previously run" workflow is desired.
 var selectedArtist = "Daft Punk";
 var selectedAlbum = "Random Access Memories";
-var daftPunkAlbums = ["Homework", "Discovery", "Daft Club", "Human After All", "TRON: Legacy", "TRON: Legacy R3CONF1GUR3D", "Random Access Memories"];
+var daftPunkAlbumsDuration = [225, 709, 211, 268, 301, 238, 452]; // Duration in seconds.
 var remoteAvailable = false;
 // remoteAvailable = true; // Uncomment to enable "full" remote sync.
 var artistCount = 526;
 // artistCount = 234; // Uncomment if "fully synced" workflow is desired. Requires firstRun = false
 var availableArtists;
+var selectedSongs = 5;
 
 // Pre-execution variable definitions
 // Check to see if all music is synced and how much needs to be synced.
@@ -99,6 +100,22 @@ var selectionInformation = function (selectedArtist, selectedAlbum) {
     return (albumName + " by " + artistName);
 };
 
+var selectedAlbumsDuration = function (numberOfAlbumsSelected, albumList) {
+    // Initialize internal variables. Check to see if number of albums selected fits in array.
+    var selectedAlbumsAvailable = (numberOfAlbumsSelected <= albumList.length), totalDuration = 0;
+    if (!selectedAlbumsAvailable) {
+        // False, the number of albums selected is greater than available.
+        console.log("More songs than are available for this album were selected. Only available songs will be counted.");
+    }
+    // Loop through selected songs from album (starting from the beginning). Stop either when number selected is reached or limit of album is reached.
+    for (var currentAlbum = 0; (currentAlbum < numberOfAlbumsSelected && currentAlbum < albumList.length);  currentAlbum++) {
+        totalDuration += albumList[currentAlbum];
+        // After adding the seconds to the total duration, output information about the current song's duration.
+        console.log("Song #" + (currentAlbum + 1) + " is " + ~~(albumList[currentAlbum] / 60) + " minutes and " + (albumList[currentAlbum] % 60) + " seconds long.");
+    }
+    return totalDuration;
+};
+
 // Execution
 // Welcome the user to the application.
 welcomeMessage(firstRun);
@@ -110,3 +127,5 @@ var synchedArtists = syncRemainingArtists(musicToSync);
 availableArtists = synchedArtists + availableArtists;
 // Gather information regarding the selected album and which artist it is by.
 var selection = selectionInformation(selectedArtist, selectedAlbum);
+// Gather length of selected songs
+var selectedDuration = selectedAlbumsDuration(selectedSongs, daftPunkAlbumsDuration);
