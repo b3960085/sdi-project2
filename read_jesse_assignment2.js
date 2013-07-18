@@ -53,6 +53,7 @@ var syncRemainingArtists = function(currentArtistCount) {
         // If the remaining artist count is negative, this denotes that a "zero-sync" was performed.
         if (remainingArtists < 0) {
             console.log("Synced artist information, no additional artists found.");
+            // Break to prevent further alteration of artists synced for return.
             break;
         }
         // If the loop has continued, increment the artist synced count and output status.
@@ -62,7 +63,7 @@ var syncRemainingArtists = function(currentArtistCount) {
             // If there are no remaining artists, output the completed sync count.
             if (remainingArtists === 0) {
                 console.log("Sync complete, " + artistsSynced + " artists synced.");
-                // The break is to prevent the "zero-sync" output to the console.
+                // The break is to prevent the "zero-sync" outputting to the console.
                 break;
             } else {
                 // Simple counting output.
