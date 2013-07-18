@@ -14,12 +14,7 @@ var remoteAvailable = false;
 var artistCount = 526;
 // artistCount = 234; // Uncomment if "fully synced" workflow is desired. Requires firstRun = false
 var availableArtists;
-var selectedSongs = 5;
-
-// Pre-execution variable definitions
-// Check to see if all music is synced and how much needs to be synced.
-var allMusicAvailableLocally = (availableArtists >= artistCount);
-var musicToSync = (artistCount - availableArtists);
+var numberOfSelectedSongs = 5;
 
 // Function Declarations
 // Procedure
@@ -46,6 +41,7 @@ var willSyncBePerformed = function (musicIsLocal, remoteAvailablilty) {
     if (allMusicAvailableLocally && remoteAvailablilty) {
         // All music is available locally and the server is available for refresh.
         console.log("All music appears synced locally, a check-in with the server will be performed to refresh artist information.");
+        return false;
     } else {
         if (musicIsLocal) {
             // All music is available locally, but the remote is partially available.
@@ -56,7 +52,7 @@ var willSyncBePerformed = function (musicIsLocal, remoteAvailablilty) {
             // All music is not available locally, but the remote is only partially available.
             console.log("Additional music is available on the server, but it is currently experiencing issues. Only 24 additional artists are able to be synced at this time.");
             musicToSync = 24;
-            return false;
+            return true;
 
         }
     }
@@ -100,7 +96,7 @@ var selectionInformation = function (selectedArtist, selectedAlbum) {
     return (albumName + " by " + artistName);
 };
 
-var selectedAlbumsDuration = function (numberOfAlbumsSelected, albumList) {
+var selectedSongDurations = function (numberOfAlbumsSelected, albumList) {
     // Initialize internal variables. Check to see if number of albums selected fits in array.
     var selectedAlbumsAvailable = (numberOfAlbumsSelected <= albumList.length), totalDuration = 0, selectedSongs = [];
     if (!selectedAlbumsAvailable) {
@@ -117,16 +113,49 @@ var selectedAlbumsDuration = function (numberOfAlbumsSelected, albumList) {
     return selectedSongs;
 };
 
+var totalSongDuration = function (selectedSongList) {
+    var totalDuration = 0;
+    selectedSongList.forEach(function (song) {
+        totalDuration += song;
+    });
+    return totalDuration;
+};
+
 // Execution
 // Welcome the user to the application.
 welcomeMessage(firstRun);
+// Configure music availablility and need to sync count based off start-up.
+var allMusicAvailableLocally = (availableArtists >= artistCount);
+var musicToSync = (artistCount - availableArtists);
 // Check if the music is available to sync, if it can sync, or if a refresh will be attempted instead
-var willSync = willSyncBePerformed(allMusicAvailableLocally, remoteAvailable);
+var artistSyncing = willSyncBePerformed(allMusicAvailableLocally, remoteAvailable);
 // Attempt the sync/refresh
-var synchedArtists = syncRemainingArtists(musicToSync);
+var syncedArtists = syncRemainingArtists(musicToSync);
 // Update the available artist count to reflect added artists, if any.
-availableArtists = synchedArtists + availableArtists;
+availableArtists = syncedArtists + availableArtists;
 // Gather information regarding the selected album and which artist it is by.
 var selection = selectionInformation(selectedArtist, selectedAlbum);
 // Gather length of selected songs
-var selectedSongs = selectedAlbumsDuration(selectedSongs, daftPunkAlbumsDuration);
+var selectedSongs = selectedSongDurations(numberOfSelectedSongs, daftPunkAlbumsDuration);
+var selectedSongsTotalDuration = totalSongDuration(selectedSongs);
+
+// Begin final results output. Note that rather than include a "true/false" output, I base the output off the boolean so it sounds natural. Additionally, rather than output a list of the returned songs durations, I return the number of songs listened to and utilize an addition function to reference the total duration of the selected songs.
+if (artistSyncing) { console.log("\nThanks for listening, I hope you enjoyed the music!\nToday you listened to " + (selectedSongs.length) + " songs for a total duration of " + ~~(selectedSongsTotalDuration / 60) + " minutes and " + (selectedSongsTotalDuration % 60) + " seconds.\nYour most played album continues to be " + selection + ".\nIn this session, an additional " + syncedArtists + " artists were synced to the device."); }
+else { console.log("\n Thanks for listening, I hope you enjoyed the music!\nToday you listened to " + (selectedSongs.length) + " songs for a total duration of " + ~~(selectedSongsTotalDuration / 60) + " minutes and " + (selectedSongsTotalDuration % 60) + " seconds.\nYour most played album continues to be " + selection + ".\nIn this session, an artist sync was not completed but a refresh was. This resulted in " + syncedArtists + " artist additions."); }
+
+// Required output
+// I decided to include the required standard outputs to ensure credit is received
+var debugOutput = function () {
+    console.log("");
+    console.log("Debug output:");
+    console.log("First run of application: " + firstRun);
+    console.log("Remote server available: " + remoteAvailable);
+    console.log("Number of remote artists: " + artistCount);
+    console.log("Number of local artists: " + availableArtists);
+    console.log("Artists were synced: " + artistSyncing);
+    console.log("Number of synced artists in session: " + syncedArtists);
+    console.log("The most selected item was: " + selection);
+    console.log("Number of selected songs: " + numberOfSelectedSongs);
+    console.log("Selected songs durations: " + selectedSongs);
+};
+debugOutput(); // Comment out to remove debug output.
