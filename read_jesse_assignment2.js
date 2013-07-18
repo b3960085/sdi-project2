@@ -102,18 +102,19 @@ var selectionInformation = function (selectedArtist, selectedAlbum) {
 
 var selectedAlbumsDuration = function (numberOfAlbumsSelected, albumList) {
     // Initialize internal variables. Check to see if number of albums selected fits in array.
-    var selectedAlbumsAvailable = (numberOfAlbumsSelected <= albumList.length), totalDuration = 0;
+    var selectedAlbumsAvailable = (numberOfAlbumsSelected <= albumList.length), totalDuration = 0, selectedSongs = [];
     if (!selectedAlbumsAvailable) {
-        // False, the number of albums selected is greater than available.
+        // The number of albums selected is greater than available.
         console.log("More songs than are available for this album were selected. Only available songs will be counted.");
     }
     // Loop through selected songs from album (starting from the beginning). Stop either when number selected is reached or limit of album is reached.
     for (var currentAlbum = 0; (currentAlbum < numberOfAlbumsSelected && currentAlbum < albumList.length);  currentAlbum++) {
         totalDuration += albumList[currentAlbum];
+        selectedSongs.push(albumList[currentAlbum]);
         // After adding the seconds to the total duration, output information about the current song's duration.
         console.log("Song #" + (currentAlbum + 1) + " is " + ~~(albumList[currentAlbum] / 60) + " minutes and " + (albumList[currentAlbum] % 60) + " seconds long.");
     }
-    return totalDuration;
+    return selectedSongs;
 };
 
 // Execution
@@ -128,4 +129,4 @@ availableArtists = synchedArtists + availableArtists;
 // Gather information regarding the selected album and which artist it is by.
 var selection = selectionInformation(selectedArtist, selectedAlbum);
 // Gather length of selected songs
-var selectedDuration = selectedAlbumsDuration(selectedSongs, daftPunkAlbumsDuration);
+var selectedSongs = selectedAlbumsDuration(selectedSongs, daftPunkAlbumsDuration);
